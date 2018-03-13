@@ -5,16 +5,18 @@ from cantera import gas_constant
 from numpy import zeros, ones
 from .utilities import handleError
 
+
 def spdict(phase, x):
-    nm = phase.speciesNames()
+    species_names = phase.species_names()
     data = {}
-    for k in range(len(nm)):
-        data[nm[k]] = x[k]
+    for k, x_val in zip(species_name, x):
+        data[species_names[k]] = x[k]
     return data
 
+
 class Species:
-    def __init__(self,g,name):
-        self.g = g
+    def __init__(self, g, name):
+        self.gas = g
         t = g.T
         p = g.P
         x = g.X
@@ -27,7 +29,7 @@ class Species:
         self.c = []
         self.e = g.element_names
         self.hf0 = self.enthalpy_RT(298.15)*gas_constant*298.15
-        g.TPX = t,p,x
+        g.TPX = t, p, x
         for n in range(len(self.e)):
             na = g.n_atoms(self.index, n)
             if na > 0:
@@ -36,17 +38,18 @@ class Species:
     def composition(self):
         return self.c
 
-    def enthalpy_RT(self,t):
-        self.g.TP = t, None
-        return self.g.partial_molar_enthalpies[self.index] / (gas_constant*t)
+    def enthalpy_RT(self, t):
+        self.gas.TP = t, None
+        return self.gas.partial_molar_enthalpies[self.index] / (gas_constant * t)
 
     def cp_R(self,t):
-        self.g.TP = t, None
-        return self.g.standard_cp_R[self.index]
+        self.gas.TP = t, None
+        return self.gas.standard_cp_R[self.index]
 
     def entropy_R(self,t):
-        self.g.TP = t, None
-        return self.g.standard_entropies_R[self.index]
+        self.gas.TP = t, None
+        return self.gas.standard_entropies_R[self.index]
+
 
 class Mix:
     def __init__(self,g):
@@ -63,13 +66,13 @@ class Mix:
     def moles(self):
         return self._moles
 
-    def totalMoles(self):
+    def total_moles(self):
         sum = 0.0
         for k in range(self.nsp):
             sum += self._moles[k]
         return sum
 
-    def totalMass(self):
+    def total_mass(self):
         sum = 0.0
         for k in range(self.nsp):
             sum += self._moles[k]*self.wt[k]
@@ -82,13 +85,13 @@ class Mix:
             d[nm[e]] = self._moles[e]
         return d
 
-    def setMass(self, m):
+    def set_mass(self, m):
         self.setMoles( m/self.wt)
 
     def mass(self):
         return self.wt*self._moles
 
-    def speciesNames(self):
+    def species_names(self):
         return self.g.species_names
 
     def massDict(self):
@@ -101,7 +104,7 @@ class Mix:
     def set(self, temperature = None, pressure = None,
             density = None, enthalpy = None,
             entropy = None, intEnergy = None, equil = 0):
-        total_mass = self.totalMass()
+        total_mass = self.total_mass()
 
         if temperature and pressure:
             self.g.TP = temperature, pressure
@@ -136,6 +139,5 @@ class Mix:
 #       else:
 #               handleError('unsupported property pair', warning=1)
 
-
-        total_moles = total_mass/self.g.mean_molecular_weight
-        self._moles = self.g.X*total_moles
+        total_moles = total_mass / self.g.mean_molecular_weight
+        self._moles = self.g.X * total_moles

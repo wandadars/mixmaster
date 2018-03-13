@@ -194,8 +194,8 @@ class MixtureFrame(Frame):
             self.c.set()
             self.c.show()
             self.top.update()
-            #thermo.showState()
-            #self.top.kinetics.show()
+            #thermo_frame.showState()
+            #self.top.kinetics_frame.show()
 
     def makeEntries(self):
         self.entries.grid(row=0,column=0,sticky=W+N+S+E)

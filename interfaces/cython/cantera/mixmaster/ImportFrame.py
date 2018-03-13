@@ -94,7 +94,7 @@ class ImportFrame(Frame):
         outfile = p+os.sep+nm+'.xml'
         try:
             print('not supported.')
-            #ck2ctml(infile = ckfile, thermo = thermdb,
+            #ck2ctml(infile = ckfile, thermo_frame = thermdb,
             #       transport = trandb, outfile = outfile,
             #       id = nm)
             self.hide()
@@ -105,7 +105,7 @@ class ImportFrame(Frame):
             self.hide()
             return
 
-        self.top.loadmech(nm,outfile,1)
+        self.top.load_mech(nm, outfile, 1)
         self.hide()
 
 ##              cmd = 'ck2ctml -i '+ckfile+' -o '+outfile
@@ -116,7 +116,7 @@ class ImportFrame(Frame):
 ##              cmd += ' -id '+nm
 ##              ok = os.system(cmd)
 ##              if ok == 0:
-##                      self.top.loadmech(nm,outfile,1)
+##                      self.top.load_mech(nm,outfile,1)
 
 
     def hide(self):

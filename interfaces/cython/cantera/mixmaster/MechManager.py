@@ -86,5 +86,5 @@ class MechManager(Frame):
     def setMechanism(self, event=None):
         i = self.mechindx.get()
         self.app.mech = self.mechanisms[i-1][1]
-        self.app.makeMix()
+        self.app.make_mix()
         self.app.makeWindows()

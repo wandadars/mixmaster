@@ -85,8 +85,8 @@ class EditFrame(Frame):
                 c, r = 0, r + 1
 
     def getspecies(self):
-        print(getSpecies(self.mix.speciesNames(),
-                         self.mix.speciesNames()))
+        print(getSpecies(self.mix.species_names(),
+                         self.mix.species_names()))
 
     def editSpecies(self, event=None):
         e = Toplevel(event.widget.master)

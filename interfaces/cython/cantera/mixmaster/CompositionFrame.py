@@ -73,7 +73,7 @@ class CompFrame(Frame):
             mix.setMoles(mf.comp)
 
         elif c == 1:
-            mix.setMass(mf.comp)
+            mix.set_mass(mf.comp)
 
         elif c == 2:
             pass
@@ -88,12 +88,12 @@ class CompFrame(Frame):
         g = mix.g
         if c == 0:
             mf.var.set("Moles")
-            #mf.data = spdict(mix.g, mix.moles())
+            #mf.data = spdict(mix.gas, mix.moles())
             mf.comp = mix.moles()
 
         elif c == 1:
             mf.var.set("Mass")
-            #mf.data = spdict(mix.g,mix.mass())
+            #mf.data = spdict(mix.gas,mix.mass())
             mf.comp = mix.mass()
 
         elif c == 2:
@@ -134,7 +134,7 @@ class MixtureFrame(Frame):
         self.var = StringVar()
         self.var.set("Moles")
         self.comp = np.array(self.top.mix.moles())
-        self.names = self.top.mix.speciesNames()
+        self.names = self.top.mix.species_names()
         self.nsp = len(self.names)
         #self.data = self.top.mix.moleDict()
         self.makeControls()

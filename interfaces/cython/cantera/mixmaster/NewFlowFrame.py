@@ -54,7 +54,7 @@ class NewFlowFrame(Frame):
 ##              self.update()
 ##              self.entries.destroy()
 ##              self.entries=Frame(self)
-##              self.makeEntries()
+##              self.make_entries()
 
 ##      def minimize(self,Event=None):
 ##          self.c.hide.set(1)
@@ -69,7 +69,7 @@ class NewFlowFrame(Frame):
 ##          self.entries.bind("<Double-1>",self.minimize)
 
 
-##      def makeEntries(self):
+##      def make_entries(self):
 ##              self.entries.grid(row=0,column=0,sticky=W+N+S+E)
 ##              self.entries.config(relief=GROOVE,bd=4)
 ##              DATAKEYS = self.top.species

@@ -117,7 +117,7 @@ class NewFlowDialog:
                                  'Error reading file %s. See log file for more information.' % infile)
 
         #self.flow = Flow1D(flow_type = ftype, flow_geom = fgeom,
-        #                   pressure = p, grid = gr, gas = g)
+        #                   pressure = p, grid = gr, gas = gas)
         self.top.destroy()
 
     def getinfile(self):

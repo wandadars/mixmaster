@@ -76,7 +76,7 @@ class DataFrame(Frame):
         self.menubar = Frame(self, relief=GROOVE,bd=2)
         self.menubar.grid(row=0,column=0,sticky=N+W+E,columnspan=10)
         f = [('Open...',self.browseForDatafile)]
-        #make_menu('File',self.menubar,items)
+        #make_menu('File',self.menu_bar,items)
         make_menu('File',self.menubar,f)
         make_menu('Dataset',self.menubar,self.datasets)
         make_menu('Plot',self.menubar,self.vars)
@@ -276,7 +276,7 @@ class DataFrame(Frame):
             self.y[k] = self.data[k+Y_LOC,n]
 
         self.top.thermo.checkTPBoxes()
-        self.mix.setMass(self.y)
+        self.mix.set_mass(self.y)
         self.mix.set(temperature = self.data[T_LOC,n],
                      pressure = self.data[P_LOC,n])
 

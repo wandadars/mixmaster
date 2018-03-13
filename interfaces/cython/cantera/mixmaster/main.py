@@ -72,20 +72,20 @@ class MixMaster:
         self.cwin = ControlWindow(_app_title, self.master)
         self.cwin.master.resizable(FALSE, FALSE)
 
-        self.menubar = Frame(self.cwin, relief=GROOVE, bd=2)
-        self.menubar.grid(row=0, column=0, sticky=N + W + E)
+        self.menu_bar = Frame(self.cwin, relief=GROOVE, bd=2)
+        self.menu_bar.grid(row=0, column=0, sticky=N + W + E)
 
         self.mix_frame = None
         self.thermo_frame = None
         self.transport = None
         self.kinetics_frame = None
-        self.rxndata = None
-        self.rxnpaths = None
+        self.rxn_data = None
+        self.rxn_paths = None
         self.edit = None
         self.file_name = None
 
-        self.mechframe = MechManager(self.cwin, self)
-        self.mechframe.grid(row=1, column=0, sticky=N + W)
+        self.mech_frame = MechManager(self.cwin, self)
+        self.mech_frame.grid(row=1, column=0, sticky=N + W)
 
         fileitems = [('Load Mixture...', self.open_mech),
                      ('Import Mechanism File...', self.import_file),
@@ -95,7 +95,7 @@ class MixMaster:
                      ('Exit', self.stop),
                      []
                      ]
-        self.filemenu = make_menu('File', self.menubar, fileitems)
+        self.filemenu = make_menu('File', self.menu_bar, fileitems)
 
         self.vtherm = IntVar()
         self.vcomp = IntVar()
@@ -109,12 +109,12 @@ class MixMaster:
         dataitems = [(' Import Flame Data', test_it),
                      (' Import CSV Data', test_it),
                      []]
-        # self.datamenu = make_menu('Data', self.menubar, dataitems)
+        # self.datamenu = make_menu('Data', self.menu_bar, dataitems)
 
 
         # toolitems = [(' Convert...', self.import_file),
         #             []]
-        # self.toolmenu = make_menu('Tools', self.menubar, toolitems)
+        # self.toolmenu = make_menu('Tools', self.menu_bar, toolitems)
 
 
         w = [(' Thermodynamic State', self.show_thermo, 'check', self.vtherm),
@@ -125,9 +125,9 @@ class MixMaster:
              (' Reaction Paths...', self.show_rpaths),
              []]
 
-        self.viewmenu = make_menu('Windows', self.menubar, w)
+        self.viewmenu = make_menu('Windows', self.menu_bar, w)
 
-        self.helpmenu = make_menu('Help', self.menubar,
+        self.helpmenu = make_menu('Help', self.menu_bar,
                                   [('About ' + _app_title + '...', self.about_mix),
                                    ('About Cantera...', test_it),
                                    []
@@ -187,7 +187,7 @@ class MixMaster:
         if not mech_name:
             mech_name = self.mechname
 
-        self.mechframe.addMechanism(mech_name, self.mech)
+        self.mech_frame.add_mechanism(mech_name, self.mech)
         if mw == 1:
             self.makeWindows()
 
@@ -264,8 +264,8 @@ class MixMaster:
 #        self.transport = TransportFrame(self.cwin, self)
         self.kinetics_frame = SpeciesKineticsFrame(self.cwin, self)
 
-        self.add_window('rxndata', ReactionKineticsFrame(self.vrxn, self))
-        self.add_window('rxnpaths', ReactionPathFrame(self))
+        self.add_window('rxn_data', ReactionKineticsFrame(self.vrxn, self))
+        self.add_window('rxn_paths', ReactionPathFrame(self))
         self.add_window('dataset', DataFrame(None, self))
 
 
@@ -283,9 +283,9 @@ class MixMaster:
         #self.showdata()
 
         if self.mech:
-            self.mechframe.grid(row=1,column=0)
+            self.mech_frame.grid(row=1, column=0)
         else:
-            self.mechframe.grid_forget()
+            self.mech_frame.grid_forget()
         #self.showedit()
 
     def show(self, frame, vis, row, col):
@@ -307,10 +307,10 @@ class MixMaster:
             self.show(self.kinetics_frame, self.vkin.get(), 10, 0)
 
     def show_rxns(self):
-        self._windows['rxndata'].show()
+        self._windows['rxn_data'].show()
 
     def show_rpaths(self):
-        self._windows['rxnpaths'].show()
+        self._windows['rxn_paths'].show()
 
     def showdata(self):
         self._windows['dataset'].browseForDatafile()

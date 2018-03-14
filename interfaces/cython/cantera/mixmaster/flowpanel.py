@@ -4,57 +4,54 @@
 # functionality imports
 import sys
 if sys.version_info[0] == 3:
-    from tkinter import *
+    import tkinter as tk
 else:
-    from Tkinter import *
+    import Tkinter as tk
 
 from Cantera.gui import menu, newflow
 
+
 class App:
     def __init__(self, master):
-
         try:
             self.root = master.root
         except:
             self.root = master
 
-        self.frame = Frame(master)
-        self.frame.grid(row = 0, column = 0)
+        self.frame = tk.Frame(master)
+        self.frame.grid(row=0, column=0)
 
         self.makemenu(self.frame)
 
-        self.quitbutton = Button(self.frame, text = "Quit",
-                                 command = self.frame.quit)
-        self.quitbutton.grid(row = 1, column = 0)
+        self.quitbutton = tk.Button(self.frame, text='Quit',
+                                    command=self.frame.quit)
+        self.quitbutton.grid(row=1, column=0)
 
-        self.newbutton = Button(self.frame, text = "New...",
-                                command = self.notyet)
-        self.newbutton.grid(row = 1, column = 1)
+        self.newbutton = tk.Button(self.frame, text='New...',
+                                   command=self.notyet)
+        self.newbutton.grid(row=1, column=1)
 
     def notyet(self):
         print('not yet!')
 
-
     def newflow(self):
         n = newflow.NewFlowDialog(self.root)
 
-    def makemenu(self,frame):
-        self.menubar = Frame(frame, relief=FLAT, bd=0)
-        self.menubar.grid(row = 0, column = 0)
+    def makemenu(self, frame):
+        self.menubar = tk.Frame(frame, relief=tk.FLAT, bd=0)
+        self.menubar.grid(row=0, column=0)
 
-        self.filemenu = menu.make_menu('File', self.menubar,
-                                  [('New...', self.newflow),
-                                   ('Open...', self.notyet),
-                                   ('Save As...', self.notyet),
-                                   'separator',
-                                   ('Exit', frame.quit),
-                                   []
-                                   ])
+        menu_items = [('New...', self.newflow),
+                      ('Open...', self.notyet),
+                      ('Save As...', self.notyet),
+                      'separator',
+                      ('Exit', frame.quit),
+                      []
+                      ]
+
+        self.filemenu = menu.make_menu('File', self.menubar, menu_items,)
 
 
-
-root = Tk()
-
+root = tk.Tk()
 app = App(root)
-
 root.mainloop()

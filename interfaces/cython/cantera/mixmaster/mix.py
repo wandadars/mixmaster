@@ -6,11 +6,11 @@ from numpy import zeros, ones
 from .utilities import handleError
 
 
-def spdict(phase, x):
+def species_dict(phase, x):
     species_names = phase.species_names()
     data = {}
-    for k, x_val in zip(species_name, x):
-        data[species_names[k]] = x[k]
+    for name, x_val in zip(species_names, x):
+        data[name] = x_val
     return data
 
 
@@ -67,16 +67,16 @@ class Mix:
         return self._moles
 
     def total_moles(self):
-        sum = 0.0
+        mole_sum = 0.0
         for k in range(self.nsp):
-            sum += self._moles[k]
-        return sum
+            mole_sum += self._moles[k]
+        return mole_sum
 
     def total_mass(self):
-        sum = 0.0
+        mass_sum = 0.0
         for k in range(self.nsp):
-            sum += self._moles[k]*self.wt[k]
-        return sum
+            mass_sum += self._moles[k]*self.wt[k]
+        return mass_sum
 
     def moleDict(self):
         d = {}
@@ -101,9 +101,9 @@ class Mix:
             d[nm[e]] = self._moles[e]*self.wt[e]
         return d
 
-    def set(self, temperature = None, pressure = None,
-            density = None, enthalpy = None,
-            entropy = None, intEnergy = None, equil = 0):
+    def set(self, temperature=None, pressure=None,
+            density=None, enthalpy=None,
+            entropy=None, intEnergy=None, equil=0):
         total_mass = self.total_mass()
 
         if temperature and pressure:
@@ -127,12 +127,12 @@ class Mix:
                 self.g.equilibrate('SP')
 
         elif density and entropy:
-            self.g.SV = entropy, 1.0/density
+            self.g.SV = entropy, 1.0 / density
             if equil:
                 self.g.equilibrate('SV')
 
         elif density and intEnergy:
-            self.g.UV = intEnergy, 1.0/density
+            self.g.UV = intEnergy, 1.0 / density
             if equil:
                 self.g.equilibrate('UV')
 

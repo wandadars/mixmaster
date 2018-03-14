@@ -5,59 +5,59 @@ from cantera import *
 
 import sys
 if sys.version_info[0] == 3:
-    from tkinter import *
+    import tkinter as tk
 else:
-    from Tkinter import *
+    import Tkinter as tk
 
 from .Units import temperature, pressure, density, specificEnergy, specificEntropy
 from .unit_chooser import UnitVar
 from .thermo_prop import ThermoProp
 from .utilities import handleError
 
-_PRESSURE = 1
 _TEMPERATURE = 0
+_PRESSURE = 1
 _DENSITY = 2
 _INTENERGY = 3
 _ENTHALPY = 4
 _ENTROPY = 5
 
-class ThermoFrame(Frame):
-    def __init__(self,master,top):
-        Frame.__init__(self,master)
-        self.config(relief=GROOVE, bd=4)
+class ThermoFrame(tk.Frame):
+    def __init__(self, master, top):
+        tk.Frame.__init__(self, master)
+        self.config(relief=tk.GROOVE, bd=4)
         self.top = top
         self.mix = self.top.mix
         self.warn = 0
-        self.internal = Frame(self)
-        self.internal.pack(side=LEFT,anchor=N+W,padx=2,pady=2)
-        self.controls=Frame(self.internal)
-        self.controls.pack(side=LEFT,anchor=N+W,padx=4,pady=5)
+        self.internal = tk.Frame(self)
+        self.internal.pack(side=tk.LEFT, anchor=tk.N + tk.W, padx=2, pady=2)
+        self.controls = tk.Frame(self.internal)
+        self.controls.pack(side=tk.LEFT, anchor=tk.N + tk.W, padx=4, pady=5)
 
-        self.entries=Frame(self.internal)
-        self.entries.pack(side=LEFT,anchor=N,padx=4,pady=2)
+        self.entries = tk.Frame(self.internal)
+        self.entries.pack(side=tk.LEFT, anchor=tk.N, padx=4, pady=2)
         self.makeEntries()
         self.makeControls()
         self.showState()
 
     def makeControls(self):
-        Button(self.controls,text='Set State', width=15,
-               command=self.setState).grid(column=0,row=0)
-        self.equil = IntVar()
+        tk.Button(self.controls, text='Set State', width=15,
+                  command=self.setState).grid(column=0, row=0)
+        self.equil = tk.IntVar()
         self.equil.set(0)
-        Button(self.controls,text='Equilibrate', width=15,
-               command=self.eqset).grid(column=0,row=1)
-##              Radiobutton(self.controls,text='Frozen',variable = self.equil,
-##                             command=self.freeze,value=0).grid(column=0,row=2,sticky='W')
-##              Radiobutton(self.controls,text='Equilibrium',
-##                          variable=self.equil,
-##                             command=self.eqset,value=1).grid(column=0,row=3,sticky='W')
+        tk.Button(self.controls, text='Equilibrate', width=15,
+                  command=self.eqset).grid(column=0, row=1)
+        # Radiobutton(self.controls,text='Frozen',variable = self.equil,
+        #             command=self.freeze,value=0).grid(column=0,row=2,sticky='W')
+        # Radiobutton(self.controls,text='Equilibrium',
+        #             variable=self.equil,
+        #             command=self.eqset,value=1).grid(column=0,row=3,sticky='W')
 
     def eqset(self):
         self.equil.set(1)
         self.setState()
         self.equil.set(0)
         #if self.top.mixframe:
-        #       self.top.mixframe.redo()
+        #   self.top.mixframe.redo()
 
     def freeze(self):
         self.equil.set(0)
@@ -68,14 +68,12 @@ class ThermoFrame(Frame):
         self.entries.pack()
         self.variable = {}
         self.prop = []
-        props = ['Temperature', 'Pressure', 'Density',
-                 'Internal Energy', 'Enthalpy', 'Entropy']
-        units = [temperature, pressure, density, specificEnergy,
-                 specificEnergy, specificEntropy]
+        property_units = [('Temperature', temperature), ('Pressure', pressure), ('Density', density),
+                          ('Internal Energy', specificEnergy), ('Enthalpy', specificEnergy),
+                          ('Entropy', specificEntropy)]
         defaultunit = [0, 2, 0, 1, 1, 1]
-        for i in range(len(props)):
-            self.prop.append(ThermoProp(self.entries, self, i, props[i],
-                                        0.0, units[i], defaultunit[i]))
+        for i, (property, unit) in enumerate(property_units):
+            self.prop.append(ThermoProp(self.entries, self, i, property, 0.0, unit, defaultunit[i]))
             #self.prop[-1].entry.bind("<Any-Leave>",self.setState)
         self.last2 = self.prop[3]
         self.last1 = self.prop[2]
@@ -101,46 +99,39 @@ class ThermoFrame(Frame):
         self.prop[_ENTHALPY].set(self.mix.g.enthalpy_mass)
         self.prop[_ENTROPY].set(self.mix.g.entropy_mass)
 
-    def setState(self,event=None):
+    def setState(self, event=None):
         if event:
             self.warn = 0
         else:
             self.warn = 1
         self.top.mixfr.update()
         i = self.equil.get()
-        optlist = ['frozen','equilibrium']
+        optlist = ['frozen', 'equilibrium']
         opt = [optlist[i]]
 
-        if self.prop[_PRESSURE].isChecked() \
-           and self.prop[_TEMPERATURE].isChecked():
-            self.mix.set(
-                    temperature = self.prop[_TEMPERATURE].get(),
-                    pressure = self.prop[_PRESSURE].get(),
-                    equil=i)
-
-        elif self.prop[_DENSITY].isChecked() \
-             and self.prop[_TEMPERATURE].isChecked():
-            self.mix.set(
-                    temperature = self.prop[_TEMPERATURE].get(),
-                    density = self.prop[_DENSITY].get(),
-                    equil=i)
-
-        elif self.prop[_ENTROPY].isChecked() \
-             and self.prop[_PRESSURE].isChecked():
-            self.mix.set(pressure = self.prop[_PRESSURE].get(),
-                         entropy = self.prop[_ENTROPY].get(),
+        if self.prop[_PRESSURE].isChecked() and self.prop[_TEMPERATURE].isChecked():
+            self.mix.set(temperature=self.prop[_TEMPERATURE].get(),
+                         pressure=self.prop[_PRESSURE].get(),
                          equil=i)
 
-        elif self.prop[_ENTHALPY].isChecked() \
-             and self.prop[_PRESSURE].isChecked():
-            self.mix.set(pressure = self.prop[_PRESSURE].get(),
-                         enthalpy = self.prop[_ENTHALPY].get(),
+        elif self.prop[_DENSITY].isChecked() and self.prop[_TEMPERATURE].isChecked():
+            self.mix.set(temperature=self.prop[_TEMPERATURE].get(),
+                         density=self.prop[_DENSITY].get(),
                          equil=i)
 
-        elif self.prop[_INTENERGY].isChecked() \
-             and self.prop[_DENSITY].isChecked():
-            self.mix.set(density = self.prop[_DENSITY].get(),
-                         intEnergy = self.prop[_INTENERGY].get(),
+        elif self.prop[_ENTROPY].isChecked() and self.prop[_PRESSURE].isChecked():
+            self.mix.set(pressure=self.prop[_PRESSURE].get(),
+                         entropy=self.prop[_ENTROPY].get(),
+                         equil=i)
+
+        elif self.prop[_ENTHALPY].isChecked() and self.prop[_PRESSURE].isChecked():
+            self.mix.set(pressure=self.prop[_PRESSURE].get(),
+                         enthalpy=self.prop[_ENTHALPY].get(),
+                         equil=i)
+
+        elif self.prop[_INTENERGY].isChecked() and self.prop[_DENSITY].isChecked():
+            self.mix.set(density=self.prop[_DENSITY].get(),
+                         intEnergy=self.prop[_INTENERGY].get(),
                          equil=i)
         else:
             if self.warn > 0:

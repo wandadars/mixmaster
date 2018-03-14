@@ -90,18 +90,18 @@ class CompositionFrame(tk.Frame):
         g = mix.g
         if c == 0:
             mf.var.set("Moles")
-            #mf.data = spdict(mix.gas, mix.moles())
+            #mf.data = species_dict(mix.gas, mix.moles())
             mf.comp = mix.moles()
 
         elif c == 1:
             mf.var.set("Mass")
-            #mf.data = spdict(mix.gas,mix.mass())
+            #mf.data = species_dict(mix.gas,mix.mass())
             mf.comp = mix.mass()
 
         elif c == 2:
             mf.var.set("Concentration")
             mf.comp = g.concentrations
-            #mf.data = spdict(mix,mix,mf.comp)
+            #mf.data = species_dict(mix,mix,mf.comp)
 
         for s in mf.variable.keys():
             try:
@@ -166,11 +166,11 @@ class MixtureFrame(tk.Frame):
     def show(self):
         self.active.show()
 #              for k in range(self.nsp):
-#                      sp = self.names[k]
+#                      species = self.names[k]
 #                      if self.comp[k] > _CUTOFF:
-#                              self.variable[sp].set(self.comp[k])
+#                              self.variable[species].set(self.comp[k])
 #                      else:
-#                              self.variable[sp].set(0.0)
+#                              self.variable[species].set(0.0)
 
     def redo(self):
         self.update()
@@ -215,7 +215,7 @@ class MixtureFrame(tk.Frame):
             equil = self.top.thermo.equil.get()
 
         for sp in DATAKEYS:
-            s = sp  # self.top.species[sp]
+            s = sp  # self.top.species[species]
             k = s.index
             if row > 25:
                 row = 0

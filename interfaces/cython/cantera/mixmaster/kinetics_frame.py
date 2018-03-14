@@ -73,18 +73,18 @@ class KineticsFrame(tk.Frame):
         g = mix.g
         if c == 0:
             mf.var.set("Creation Rates")
-            #mf.data = spdict(mix.gas, mix.moles())
+            #mf.data = species_dict(mix.gas, mix.moles())
             mf.comp = g.creation_rates
 
         elif c == 1:
             mf.var.set("Destruction Rates")
-            #mf.data = spdict(mix.gas,mix.mass())
+            #mf.data = species_dict(mix.gas,mix.mass())
             mf.comp = g.destruction_rates
 
         elif c == 2:
             mf.var.set("Net Production Rates")
             mf.comp = g.net_production_rates
-            #mf.data = spdict(mix,mix,mf.comp)
+            #mf.data = species_dict(mix,mix,mf.comp)
 
         for s in mf.variable.keys():
             try:
@@ -234,14 +234,14 @@ class ReactionKineticsFrame(tk.Frame):
         self.scfr = tk.Frame(self)
         self.scfr.config(relief=tk.GROOVE, bd=4)
 
-#       self.sc = Scrollbar(self.scfr,command=self.show,
+#       self.scale = Scrollbar(self.scfr,command=self.show,
 #                           variable = self.start,
 #                           orient='horizontal',length=400)
         self.sc = tk.Scale(self.scfr, command=self.show,
                         variable=self.start,
                         orient='vertical', length=400)
-        #self.sc.config(cnf={'from':0,'to':nr},variable = self.start)
-        #self.sc.bind('<Any-Enter>',self.couple)
+        #self.scale.config(cnf={'from':0,'to':nr},variable = self.start)
+        #self.scale.bind('<Any-Enter>',self.couple)
         #self.scfr.bind('<Any-Leave>',self.decouple)
         self.sc.pack(side=tk.RIGHT, fill=tk.Y)
         self.scfr.grid(row=0, column=6, rowspan=10, sticky=tk.N + tk.E + tk.W)
@@ -253,10 +253,10 @@ class ReactionKineticsFrame(tk.Frame):
 ##          d = DoubleVar()
 ##          xx = self.start.get()
 ##          d.set(xx)
-##          self.sc.config(variable = d)
+##          self.scale.config(variable = d)
 
 ##      def couple(self,event=None):
-##          self.sc.config(variable = self.start)
+##          self.scale.config(variable = self.start)
 
     def hide(self):
 #       self.vis.set(0)

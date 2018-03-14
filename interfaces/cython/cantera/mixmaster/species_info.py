@@ -10,8 +10,8 @@ else:
 import re, math
 from cantera import *
 from .Units import temperature, specificEnergy, specificEntropy
-from .UnitChooser import UnitVar
-from .GraphFrame import Graph
+from .unit_chooser import UnitVar
+from .graph_frame import Graph
 
 def testit():
     pass

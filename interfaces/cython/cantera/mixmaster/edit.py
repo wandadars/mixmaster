@@ -9,11 +9,11 @@ if sys.version_info[0] == 3:
 else:
     from Tkinter import *
 
-from .ElementFrame import getElements
+from .element_frame import getElements
 from .utilities import handleError
 from cantera import *
 from .config import *
-from .SpeciesFrame import getSpecies
+from .species_frame import getSpecies
 
 def testit():
     pass
@@ -181,7 +181,7 @@ class EditFrame(Frame):
         #self.app.mech.addElements(addList)
         try:
             self.redraw()
-            self.app.makeWindows()
+            self.app.make_windows()
         except Exception as e:
             handleError('Edit err:\n'+str(e))
 
@@ -199,4 +199,4 @@ class EditFrame(Frame):
             self.element_labels.append(x)
             n += 1
 
-        self.app.makeWindows()
+        self.app.make_windows()

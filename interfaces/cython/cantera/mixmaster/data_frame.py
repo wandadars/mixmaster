@@ -12,9 +12,9 @@ else:
 
 from cantera import *
 import numpy as np
-from .GraphFrame import Graph
-from .DataGraph import DataGraph, plotLimits
-from .ControlPanel import make_menu
+from .graph_frame import Graph
+from .data_graph import DataGraph, plotLimits
+from .control_panel import make_menu
 
 
 U_LOC = 1
@@ -292,7 +292,7 @@ class DataFrame(Frame):
         if loc >= Y_LOC:
             for n in range(npts):
                 if self.ydata[n] <= 0.0:
-                    #print n, self.ydata[n]
+                    #print n, self.y_data[n]
                     self.ydata[n] = 1.0e-20
             self.ydata = np.log10(self.ydata)
             ylog = 1

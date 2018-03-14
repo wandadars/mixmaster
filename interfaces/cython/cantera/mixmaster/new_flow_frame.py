@@ -9,7 +9,7 @@ if sys.version_info[0] == 3:
 else:
     from Tkinter import *
 
-from .SpeciesInfo import SpeciesInfo
+from .species_info import SpeciesInfo
 
 _CUTOFF = 1.e-15
 _ATOL = 1.e-15
@@ -26,7 +26,7 @@ class NewFlowFrame(Frame):
         self.p = DoubleVar()
         #self.comp.set(1.0)
         self.controls.grid(column=1,row=0,sticky=W+E+N)
-        #self.makeControls()
+        #self.make_controls()
         mf = self.master
 
         e1 = Entry(self)
@@ -35,7 +35,7 @@ class NewFlowFrame(Frame):
         #e1.config(state=ENABLED)
         e1.config(relief=RIDGE)
 
-##      def makeControls(self):
+##      def make_controls(self):
 ##              Radiobutton(self.controls,text='Moles',
 ##                          variable=self.comp,value=0,command=self.show).grid(column=0,row=0,sticky=W)
 ##              Radiobutton(self.controls,text='Mass',variable=self.comp,value=1,command=self.show).grid(column=0,row=1,sticky=W)
@@ -46,7 +46,7 @@ class NewFlowFrame(Frame):
 ##                          variable=self.hide,onvalue=1,offvalue=0,command=self.master.redo).grid(column=0,row=3,sticky=W)
 
 
-##      def makeControls(self):
+##      def make_controls(self):
 ##              self.c = CompFrame(self)
 ##              self.c.grid(column=1,row=0,sticky=E+W+N+S)
 

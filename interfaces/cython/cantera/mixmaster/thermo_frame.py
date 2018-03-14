@@ -10,8 +10,8 @@ else:
     from Tkinter import *
 
 from .Units import temperature, pressure, density, specificEnergy, specificEntropy
-from .UnitChooser import UnitVar
-from .ThermoProp import ThermoProp
+from .unit_chooser import UnitVar
+from .thermo_prop import ThermoProp
 from .utilities import handleError
 
 _PRESSURE = 1

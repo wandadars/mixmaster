@@ -5,20 +5,20 @@ from __future__ import print_function
 import sys
 
 if sys.version_info[0] == 3:
-    from tkinter import *
+    import tkinter as tk
 else:
-    from Tkinter import *
+    import Tkinter as tk
 
-from .element_frame import getElements
-from .utilities import handleError
-from cantera import *
-from .config import *
-from .species_frame import getSpecies
+from element_frame import getElements
+from utilities import handleError
+import cantera as ct
+from config import *
+from species_frame import getSpecies
 
 def testit():
     pass
 
-class EditFrame(Frame):
+class EditFrame(tk.Frame):
 
     def redraw(self):
         try:
@@ -32,7 +32,7 @@ class EditFrame(Frame):
         self.addReactionFrame()
 
     def __init__(self, master, app):
-        Frame.__init__(self, master)
+        tk.Frame.__init__(self, master)
         self.mix = app.mix
         print(self.mix, dir(self.mix))
         self.app = app
@@ -41,8 +41,8 @@ class EditFrame(Frame):
         self.redraw()
 
     def addReactionFrame(self):
-        self.rframe = Frame(self)
-        self.rframe.config(relief=GROOVE,bd=4)
+        self.rframe = tk.Frame(self)
+        self.rframe.config(relief=tk.GROOVE, bd=4)
         self.rframe.grid(row=2,column=0,columnspan=10,sticky=E+W)
         b=Button(self.rframe,text='Reactions',command=testit)
         b.grid(column=5, row=0)

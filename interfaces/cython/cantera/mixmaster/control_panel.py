@@ -17,12 +17,8 @@ else:
 #import filewindow
 
 
-def ff():
-    print(' hi ')
 
 class ControlWindow(tk.Frame):
-    fncs = [ff]*10
-
     def __init__(self, title, master=None):
         self.app = master
         tk.Frame.__init__(self, master)

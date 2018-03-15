@@ -7,10 +7,9 @@ import numpy as np
 
 
 if sys.version_info[0] == 3:
-    from tkinter import *
+    import tkinter as tk
 else:
-    from Tkinter import *
-
+    import Tkinter as tk
 
 
 def plotLimits(ypts, f=0.0, ndiv=5, logscale=0):
@@ -60,7 +59,7 @@ def plotLimits(ypts, f=0.0, ndiv=5, logscale=0):
     return ymin, ymax, fctr
 
 
-class DataGraph(Frame):
+class DataGraph(tk.Frame):
     def __init__(self, master, data, ix=0, iy=0, title='',
                  label=('x-axis', 'y-axis'), logscale=(0, 0),
                  pixelX=500, pixelY=500):
@@ -74,18 +73,16 @@ class DataGraph(Frame):
         self.minY, self.maxY, self.dy = plotLimits(data[iy, :],
                                                    logscale=self.logscale[1])
 
-        Frame.__init__(self, master, relief=RIDGE, bd=2)
+        tk.Frame.__init__(self, master, relief=tk.RIDGE, bd=2)
         self.title = Label(self, text=' ')
-        self.title.grid(row=0, column=1, sticky=W+E)
+        self.title.grid(row=0, column=1, sticky=tk.W + tk.E)
         self.graph_w, self.graph_h = pixelX - 120, pixelY - 70
         self.origin = (100, 20)
-        self.canvas = Canvas(self,
-                             width=pixelX,
-                             height=pixelY,
-                             relief=SUNKEN, bd=1)
+        self.canvas = tk.Canvas(self, width=pixelX, height=pixelY,
+                                relief=tk.SUNKEN, bd=1)
         id = self.canvas.create_rectangle(self.origin[0], self.origin[1],
                                           pixelX-20, pixelY-50)
-        self.canvas.grid(row=1, column=1, rowspan=2, sticky=N+S+E+W)
+        self.canvas.grid(row=1, column=1, rowspan=2, sticky=tk.N + tk.S + tk.E + tk.W)
         self.last_points = []
         self.ticks(self.minX, self.maxX, self.dx,
                    self.minY, self.maxY, self.dy, 10)
@@ -93,10 +90,10 @@ class DataGraph(Frame):
         self.draw()
         self.canvas.create_text(self.origin[0] + self.graph_w/2,
                                 self.origin[1] + self.graph_h + 30,
-                                text=label[0], anchor=N)
+                                text=label[0], anchor=tk.N)
         self.canvas.create_text(self.origin[0] - 50,
                                 self.origin[1] + self.graph_h/2,
-                                text=label[1], anchor=E)
+                                text=label[1], anchor=tk.E)
 
         self.x_data = []
         self.y_data = []
@@ -154,9 +151,9 @@ class DataGraph(Frame):
         #self.write_value(y)
         s = '(%g, %g)' % (self.data[self.ix, n], self.data[self.iy, n])
         if n > 0 and self.data[self.iy, n] > self.data[self.iy, n-1]:
-            idt = self.canvas.create_text(xpt+5, ypt+5, text=s, anchor=NW)
+            idt = self.canvas.create_text(xpt+5, ypt+5, text=s, anchor=tk.NW)
         else:
-            idt = self.canvas.create_text(xpt+5, ypt-5, text=s, anchor=SW)
+            idt = self.canvas.create_text(xpt+5, ypt-5, text=s, anchor=tk.SW)
 
         return [id, id_xcross, id_ycross, idt]
 
@@ -170,15 +167,15 @@ class DataGraph(Frame):
         if orient == 0:
             xpt, ypt = self.to_screen(y, 1.0)
             ypt = self.origin[1] + self.graph_h + 5
-            self.canvas.create_text(xpt, ypt, text=y, anchor=N)
+            self.canvas.create_text(xpt, ypt, text=y, anchor=tk.N)
         else:
             xpt, ypt = self.to_screen(self.minX, y)
             xpt = self.origin[0] - 5
-            self.canvas.create_text(xpt, ypt, text=y, anchor=E)
+            self.canvas.create_text(xpt, ypt, text=y, anchor=tk.E)
 
     def add_legend(self, text, color=None):
         m = Message(self, text=text, width=self.graph_w - 10)
-        m.pack(side=BOTTOM)
+        m.pack(side=tk.BOTTOM)
         if color:
             m.config(fg=color)
 

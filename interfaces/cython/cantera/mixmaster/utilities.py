@@ -3,7 +3,8 @@
 
 import string
 import os, sys
-import types, traceback
+import types
+import traceback
 
 try:
     if sys.version_info[0] == 3:
@@ -27,6 +28,7 @@ def write_CSV(f, x):
 def _print_value(name, value, unitstr):
     print(string.rjust(name, 15) + string.rjust('%10.5e' % value, 15) + ' ' +
           string.ljust(unitstr, 5))
+
 
 def handleError(message = '<error>', window=None, fatal=0, warning=0, options=None):
     """

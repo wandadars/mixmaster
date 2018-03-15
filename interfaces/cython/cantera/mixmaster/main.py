@@ -8,7 +8,32 @@
 # at http://www.cantera.org/license.txt for license and copyright information.
 
 # functionality imports
+import logging
+import os
 import sys
+import numpy as np
+
+# Cantera imports
+import cantera as ct
+
+import utilities
+
+# local imports
+from transport_frame import TransportFrame
+from composition_frame import MixtureFrame
+from thermo_frame import ThermoFrame
+from import_frame import ImportFrame
+from data_frame import DataFrame
+from kinetics_frame import SpeciesKineticsFrame, ReactionKineticsFrame, ReactionPathFrame
+
+#from Edit import EditFrame
+from mech_manager import MechManager, _autoload
+
+from .unit_chooser import UnitVar
+from control_panel import ControlWindow, make_menu, menuitem_state
+from mix import Mix, Species
+
+#Backward compatibility of tkinter
 if sys.version_info[0] == 3:
     import tkinter as tk
     from tkinter import messagebox
@@ -18,30 +43,8 @@ else:
     import tkMessageBox as messagebox
     from tkFileDialog import askopenfilename
 
-import os
 
-# Cantera imports
-import cantera as ct
-
-from numpy import zeros
-from . import utilities
-
-# local imports
-from .transport_frame import TransportFrame
-from .composition_frame import MixtureFrame
-from .thermo_frame import ThermoFrame
-from .import_frame import ImportFrame
-from .data_frame import DataFrame
-from .kinetics_frame import SpeciesKineticsFrame, ReactionKineticsFrame, ReactionPathFrame
-
-#from Edit import EditFrame
-from .mech_manager import MechManager, _autoload
-
-from .unit_chooser import UnitVar
-from .control_panel import ControlWindow
-from .control_panel import make_menu, menuitem_state
-from .mix import Mix, Species
-
+logger = logging.getLogger(__name__)
 
 # options
 _app_title = 'MixMaster'
@@ -68,10 +71,10 @@ class MixMaster:
         self._vis = {}
         self.windows = []
 
-        self.cwin = ControlWindow(_app_title, self.master)
-        self.cwin.master.resizable(tk.FALSE, tk.FALSE)
+        self.control_window = ControlWindow(_app_title, self.master)
+        self.control_window.master.resizable(tk.FALSE, tk.FALSE)
 
-        self.menu_bar = tk.Frame(self.cwin, relief=tk.GROOVE, bd=2)
+        self.menu_bar = tk.Frame(self.control_window, relief=tk.GROOVE, bd=2)
         self.menu_bar.grid(row=0, column=0, sticky=tk.N + tk.W + tk.E)
 
         self.mix_frame = None
@@ -83,7 +86,7 @@ class MixMaster:
         self.edit = None
         self.file_name = None
 
-        self.mech_frame = MechManager(self.cwin, self)
+        self.mech_frame = MechManager(self.control_window, self)
         self.mech_frame.grid(row=1, column=0, sticky=tk.N + tk.W)
 
         file_items = [('Load Mixture...', self.open_mech),
@@ -146,7 +149,7 @@ class MixMaster:
         self.master.iconify()
         self.master.update()
         self.master.deiconify()
-        self.cwin.mainloop()
+        self.control_window.mainloop()
 
     def stop(self):
         sys.exit(0)
@@ -238,11 +241,11 @@ class MixMaster:
 
         fr = [MixtureFrame, ThermoFrame, TransportFrame]
 
-        self.mix_frame = MixtureFrame(self.cwin, self)
-        self.thermo_frame = ThermoFrame(self.cwin, self)
+        self.mix_frame = MixtureFrame(self.control_window, self)
+        self.thermo_frame = ThermoFrame(self.control_window, self)
 
-        #self.transport = TransportFrame(self.cwin, self)
-        self.kinetics_frame = SpeciesKineticsFrame(self.cwin, self)
+        #self.transport = TransportFrame(self.control_window, self)
+        self.kinetics_frame = SpeciesKineticsFrame(self.control_window, self)
 
         self.add_window('reaction_data', ReactionKineticsFrame(self.vrxn, self))
         self.add_window('reaction_paths', ReactionPathFrame(self))

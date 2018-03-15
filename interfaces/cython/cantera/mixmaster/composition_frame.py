@@ -11,7 +11,7 @@ else:
 import cantera as ct
 import numpy as np
 
-from .species_info import SpeciesInfo
+from species_info import SpeciesInfo
 #from KineticsFrame import KineticsFrame
 
 _CUTOFF = 1.e-15
@@ -165,7 +165,7 @@ class MixtureFrame(tk.Frame):
 
     def show(self):
         self.active.show()
-#              for k in range(self.nsp):
+#              for k in range(self.num_species):
 #                      species = self.names[k]
 #                      if self.comp[k] > _CUTOFF:
 #                              self.variable[species].set(self.comp[k])

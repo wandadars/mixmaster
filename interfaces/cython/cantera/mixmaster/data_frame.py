@@ -1,20 +1,22 @@
 # This file is part of Cantera. See License.txt in the top-level directory or
 # at http://www.cantera.org/license.txt for license and copyright information.
 
-import os, math, string, sys
+import os
+import math
+import sys
 
 if sys.version_info[0] == 3:
-    from tkinter import *
+    import tkinter as tk
     from tkinter.filedialog import askopenfilename
 else:
-    from Tkinter import *
+    import tkinter as tk
     from tkFileDialog import askopenfilename
 
-from cantera import *
+import cantera as ct
 import numpy as np
-from .graph_frame import Graph
-from .data_graph import DataGraph, plotLimits
-from .control_panel import make_menu
+from graph_frame import Graph
+from data_graph import DataGraph, plotLimits
+from control_panel import make_menu
 
 
 U_LOC = 1
@@ -23,21 +25,21 @@ T_LOC = 3
 P_LOC = 4
 Y_LOC = 5
 
+
 def testit(e = None):
     pass
 
-class DataFrame(Frame):
-
-    def __init__(self,master,top):
+class DataFrame(tk.Frame):
+    def __init__(self, master, top):
 #           if master==None:
-        self.master = Toplevel()
-        self.master.protocol("WM_DELETE_WINDOW",self.hide)
+        self.master = tk.Toplevel()
+        self.master.protocol("WM_DELETE_WINDOW", self.hide)
         #else:
         #           self.master = master
 
         #self.vis = vis
-        Frame.__init__(self,self.master)
-        self.config(relief=GROOVE, bd=4)
+        tk.Frame.__init__(self, self.master)
+        self.config(relief=tk.GROOVE, bd=4)
         self.top = top
         self.mix = self.top.mix
         self.g = self.top.mix.g
@@ -48,80 +50,74 @@ class DataFrame(Frame):
         #self.pltwhat = None
         self.datasets = []
         self.vars = []
-        self.whichsoln = IntVar()
-        self.loc = IntVar()
+        self.whichsoln = tk.IntVar()
+        self.loc = tk.IntVar()
 #        self.loc.set(1)
         self.lastloc = T_LOC # self.loc.get()
-        self.datafile = StringVar()
-        self.solnid = StringVar()
-        self.gr = Frame(self)
-        self.n = IntVar()
+        self.datafile = tk.StringVar()
+        self.solnid = tk.StringVar()
+        self.gr = tk.Frame(self)
+        self.n = tk.IntVar()
 
-        self.scframe = Frame(self)
-        self.sc = Scale(self.scframe, variable = self.n,
-                        orient='horizontal',digits=0,
-                        length=300,resolution=1,command=self.updateplot)
-        self.sc.config(cnf={'from':0,'to':1})
-        Label(self.scframe,text='Grid Point').grid(column=0,row=0)
-        self.sc.grid(row=0,column=1)
-        self.sc.bind('<ButtonRelease-1>',self.updateState)
-        self.gr.grid(row=4,column=0,columnspan=10)
+        self.scframe = tk.Frame(self)
+        self.sc = tk.Scale(self.scframe, variable=self.n,
+                           orient='horizontal', digits=0,
+                           length=300, resolution=1, command=self.updateplot)
+        self.sc.config(cnf={'from': 0, 'to': 1})
+        tk.Label(self.scframe, text='Grid Point').grid(column=0, row=0)
+        self.sc.grid(row=0, column=1)
+        self.sc.bind('<ButtonRelease-1>', self.updateState)
+        self.gr.grid(row=4, column=0, columnspan=10)
 
-        self.grid(column=0,row=10)
+        self.grid(column=0, row=10)
         self.makeMenu()
         self.hide()
 
-
     def makeMenu(self):
-        self.menubar = Frame(self, relief=GROOVE,bd=2)
-        self.menubar.grid(row=0,column=0,sticky=N+W+E,columnspan=10)
-        f = [('Open...',self.browseForDatafile)]
+        self.menubar = tk.Frame(self, relief=tk.GROOVE, bd=2)
+        self.menubar.grid(row=0, column=0, sticky=tk.N + tk.W + tk.E, columnspan=10)
+        f = [('Open...', self.browseForDatafile)]
         #make_menu('File',self.menu_bar,items)
-        make_menu('File',self.menubar,f)
-        make_menu('Dataset',self.menubar,self.datasets)
-        make_menu('Plot',self.menubar,self.vars)
-
+        make_menu('File', self.menubar, f)
+        make_menu('Dataset', self.menubar, self.datasets)
+        make_menu('Plot', self.menubar, self.vars)
 
     def browseForDatafile(self, e=None):
-        pathname = askopenfilename(
-                filetypes=[("Data Files", ("*.xml","*.csv","*.dat")),
-                           ("All Files", "*.*")])
+        file_types = [("Data Files", ("*.xml", "*.csv", "*.dat")),
+                      ("All Files", "*.*")]
+        pathname = askopenfilename(filetypes=file_types)
         if pathname:
             self.datafile.set(pathname)
         self.show()
         self.getSoln()
 
     def getSoln(self):
-        fname = os.path.basename(self.datafile.get())
-        ff = os.path.splitext(fname)
+        file_name = os.path.basename(self.datafile.get())
+        file_name_parts = os.path.splitext(file_name)
         self.datasets = []
-        if len(ff) == 2 and (ff[1] == '.xml' or ff[1] == '.ctml'):
-
-            x = XML.XML_Node('root',src=self.datafile.get())
+        if len(file_name_parts) == 2 and (file_name_parts[1] == '.xml' or file_name_parts[1] == '.ctml'):
+            x = ct.XML.XML_Node('root', src=self.datafile.get()) #TODO check if this is a cantera call
             c = x.child('ctml')
             self.solns = c.children('simulation')
             if len(self.solns) > 1:
-                i = 0
-                for soln in self.solns:
-                    self.datasets.append((soln['id'],self.pickSoln,
-                                          'check',self.whichsoln,i))
-                    i += 1
+                for i, soln in enumerate(self.solns):
+                    self.datasets.append((soln['id'], self.pickSoln, 'check', self.whichsoln, i))
             self.solnid.set(self.solns[-1]['id'])
             self.soln = self.solns[-1]
 
             self.importData()
 
-        elif len(ff) == 2 and (ff[1] == '.csv' or ff[1] == '.CSV'):
+        elif len(file_name_parts) == 2 and (file_name_parts[1] == '.csv' or file_name_parts[1] == '.CSV'):
             self.importCSV()
 
         self.makeMenu()
         if self.loc.get() <= 0:
             self.loc.set(self.lastloc)
 
-
     def importCSV(self):
         self.lastloc = self.loc.get()
-        if self.lastloc <= 0: self.lastloc = T_LOC
+        if self.lastloc <= 0:
+            self.lastloc = T_LOC
         self.vars = []
         self.zdata = None
         self.ydata = None
@@ -142,53 +138,52 @@ class DataFrame(Frame):
         vars = vv
         fdata = np.genfromtxt(self.datafile.get(), dtype=float, delimiter=',',
                               skip_header=1).transpose()
-        self.nsp = self.g.n_species
-        self.y = np.zeros(self.nsp,'d')
-        self.data = np.zeros((self.nsp+6,fdata.shape[1]),'d')
-        self.data[0,:] = fdata[0,:]
-        self.label = ['-']*(self.nsp+6)
+        self.num_species = self.g.n_species
+        self.y = np.zeros(self.num_species, 'd')
+        self.data = np.zeros((self.num_species + 6, fdata.shape[1]), 'd')
+        self.data[0, :] = fdata[0, :]
+        self.label = ['-'] * (self.num_species + 6)
         self.label[0] = vars[0]
         w = []
-        for n in range(1,nv-1):
+        for n in range(1, nv-1):
             try:
                 k = self.g.species_index(vars[n])
             except:
                 k = -1
             v2 = vars[n]
             if v2 == 'T':
-                self.data[T_LOC,:] = fdata[n,:]
+                self.data[T_LOC, :] = fdata[n, :]
                 self.label[T_LOC] = vars[n]
                 w.append(('T', self.newplot, 'check', self.loc, T_LOC))
             elif v2 == 'P':
-                self.data[P_LOC,:] = fdata[n,:]
+                self.data[P_LOC, :] = fdata[n, :]
                 self.label[P_LOC] = vars[n]
                 w.append((vars[n], self.newplot, 'check', self.loc, P_LOC))
             elif v2 == 'u':
-                self.data[U_LOC,:] = fdata[n,:]
+                self.data[U_LOC, :] = fdata[n, :]
                 self.label[U_LOC] = vars[n]
                 w.append((vars[n], self.newplot, 'check', self.loc, U_LOC))
             elif v2 == 'V':
-                self.data[V_LOC,:] = fdata[n,:]
+                self.data[V_LOC, :] = fdata[n, :]
                 self.label[V_LOC] = vars[n]
                 w.append((vars[n], self.newplot, 'check', self.loc, V_LOC))
             elif k >= 0:
-                self.data[k+Y_LOC,:] = fdata[n,:]
+                self.data[k+Y_LOC, :] = fdata[n, :]
                 self.label[k+Y_LOC] = vars[n]
                 w.append((vars[n], self.newplot, 'check', self.loc, k + Y_LOC))
 
-        if self.data[P_LOC,0] == 0.0:
-            self.data[P_LOC,:] = np.ones(fdata.shape[1],'d')*one_atm
+        if self.data[P_LOC, 0] == 0.0:
+            self.data[P_LOC, :] = np.ones(fdata.shape[1], 'd') * ct.one_atm
             print('Warning: no pressure data. P set to 1 atm.')
 
-        self.sc.config(cnf={'from':0,'to':fdata.shape[1]-1})
+        self.sc.config(cnf={'from': 0, 'to': fdata.shape[1]-1})
         if self.loc.get() <= 0:
             self.loc.set(self.lastloc)
         self.updateplot()
 
         self.vars = w
         #self.makeMenu()
-        self.scframe.grid(row=5,column=0,columnspan=10)
-
+        self.scframe.grid(row=5, column=0, columnspan=10)
 
     def pickSoln(self):
         self.solnid.set(self.solns[self.whichsoln.get()]['id'])
@@ -196,21 +191,21 @@ class DataFrame(Frame):
 #        self.t.destroy()
         self.importData()
 
-
     def importData(self):
 
         self.lastloc = self.loc.get()
-        if self.lastloc <= 0: self.lastloc = T_LOC
+        if self.lastloc <= 0:
+            self.lastloc = T_LOC
         self.vars = []
         self.zdata = None
         self.ydata = None
         if self.plt:
             self.plt.destroy()
 
-        self.nsp = self.g.n_species
-        self.label = ['-']*(self.nsp + 6)
+        self.num_species = self.g.n_species
+        self.label = ['-'] * (self.num_species + 6)
 
-        self.y = np.zeros(self.nsp,'d')
+        self.y = np.zeros(self.num_species, 'd')
         gdata = self.soln.child('flowfield/grid_data')
         xp = self.soln.child('flowfield').children('float')
         p = 0.0
@@ -220,7 +215,7 @@ class DataFrame(Frame):
         fa = gdata.children('floatArray')
         data_size = int(fa[0]['size'])
 
-        self.data = np.zeros((self.nsp+6,data_size),'d')
+        self.data = np.zeros((self.num_species + 6, data_size), 'd')
         w = []
         for f in fa:
             t = f['title']
@@ -228,36 +223,36 @@ class DataFrame(Frame):
                 k = self.g.species_index(t)
             except:
                 k = -1
-            v = XML.getFloatArray(f)
+            v = ct.XML.getFloatArray(f)
             if t == 'z' or t == 't':
-                self.data[0,:] = v
+                self.data[0, :] = v
                 self.label[0] = t
             elif k >= 0:
                 self.data[k + Y_LOC] = v
                 self.label[k + Y_LOC] = t
                 w.append((t, self.newplot, 'check', self.loc, k + Y_LOC))
             elif t == 'T':
-                self.data[T_LOC,:] = v
+                self.data[T_LOC, :] = v
                 self.label[T_LOC] = t
                 w.append((t, self.newplot, 'check', self.loc, T_LOC))
             elif t == 'u':
-                self.data[U_LOC,:] = v
+                self.data[U_LOC, :] = v
                 self.label[U_LOC] = t
                 w.append((t, self.newplot, 'check', self.loc, U_LOC))
             elif t == 'V':
-                self.data[V_LOC,:] = v
+                self.data[V_LOC, :] = v
                 self.label[V_LOC] = t
                 w.append((t, self.newplot, 'check', self.loc, V_LOC))
 
-        self.data[P_LOC,:] = np.ones(data_size,'d')*p
+        self.data[P_LOC, :] = np.ones(data_size, 'd') * p
         self.label[P_LOC] = 'P (Pa)'
-        self.sc.config(cnf={'from':0,'to':data_size-1})
+        self.sc.config(cnf={'from': 0, 'to': data_size-1})
         if self.loc.get() <= 0:
             self.loc.set(self.lastloc)
         self.updateplot()
 
         self.vars = w
-        self.scframe.grid(row=5,column=0,columnspan=10)
+        self.scframe.grid(row=5, column=0, columnspan=10)
 
 
     def hide(self):
@@ -270,22 +265,21 @@ class DataFrame(Frame):
 
     def updateState(self, e=None):
         n = self.n.get()
-        if self.plt: self.plt.update()
+        if self.plt:
+            self.plt.update()
 
-        for k in range(self.nsp):
-            self.y[k] = self.data[k+Y_LOC,n]
+        for k in range(self.num_species):
+            self.y[k] = self.data[k+Y_LOC, n]
 
         self.top.thermo.checkTPBoxes()
         self.mix.set_mass(self.y)
-        self.mix.set(temperature = self.data[T_LOC,n],
-                     pressure = self.data[P_LOC,n])
-
+        self.mix.set(temperature=self.data[T_LOC, n], pressure=self.data[P_LOC, n])
         self.top.update()
 
-    def newplot(self,e=0):
+    def newplot(self, e=0):
         loc = self.loc.get()
-        self.zdata = self.data[0,:]
-        self.ydata = self.data[loc,:]
+        self.zdata = self.data[0, :]
+        self.ydata = self.data[loc, :]
         npts = len(self.zdata)
 
         ylog = 0
@@ -301,57 +295,58 @@ class DataFrame(Frame):
         zmin = self.zdata[0]
         zmax = self.zdata[-1]
         for n in range(npts):
-            self.gdata.append((self.zdata[n],self.ydata[n]))
+            self.gdata.append((self.zdata[n], self.ydata[n]))
 
         ymin, ymax, dtick = plotLimits(self.ydata)
         if loc > 0:
-            self.plt = DataGraph(self.gr,self.data, 0, loc,
+            self.plt = DataGraph(self.gr, self.data, 0, loc,
                                  title='',
-                                 label=(self.label[0],self.label[loc]),
-                                 logscale=(0,ylog),
-                                 pixelX=500,pixelY=400)
+                                 label=(self.label[0], self.label[loc]),
+                                 logscale=(0, ylog),
+                                 pixelX=500, pixelY=400)
             self.plt.canvas.config(bg='white')
-            self.plt.grid(row=1,column=0,columnspan=2,sticky=W+E)
+            self.plt.grid(row=1, column=0, columnspan=2, sticky=tk.W + tk.E)
             n = self.n.get()
-            self.gdot = self.plt.plot(n,'red')
+            self.gdot = self.plt.plot(n, 'red')
 
-    def updateplot(self,event=None):
-        if self.data == None: return
+    def updateplot(self, event=None):
+        if self.data is None: return
 
-        if self.zdata == None:
+        if self.zdata is None:
             self.newplot()
 
         n = self.n.get()
         self.pnt = self.zdata[n], self.ydata[n]
         if hasattr(self, 'gdot'):
             self.plt.delete(self.gdot)
-            self.gdot = self.plt.plot(n,'red')
-
+            self.gdot = self.plt.plot(n, 'red')
 
     def plotLimits(self, xy):
         ymax = -1.e10
         ymin = 1.e10
         for x, y in xy:
-            if y > ymax: ymax = y
-            if y < ymin: ymin = y
+            if y > ymax:
+                ymax = y
+            if y < ymin:
+                ymin = y
 
         dy = abs(ymax - ymin)
-        if dy < 0.2*ymin:
-            ymin = ymin*.9
-            ymax = ymax*1.1
+        if dy < 0.2 * ymin:
+            ymin = ymin * 0.9
+            ymax = ymax * 1.1
             dy = abs(ymax - ymin)
         else:
-            ymin -= 0.1*dy
-            ymax += 0.1*dy
+            ymin -= 0.1 * dy
+            ymax += 0.1 * dy
             dy = abs(ymax - ymin)
 
-        p10 = math.floor(math.log10(0.1*dy))
+        p10 = math.floor(math.log10(0.1 * dy))
         fctr = math.pow(10.0, p10)
         mm = [2.0, 2.5, 2.0]
         i = 0
-        while dy/fctr > 5:
-            fctr = mm[i % 3]*fctr
+        while dy / fctr > 5:
+            fctr = mm[i % 3] * fctr
             i += 1
-        ymin = fctr*math.floor(ymin/fctr)
-        ymax = fctr*(math.floor(ymax/fctr + 1))
-        return (ymin, ymax, fctr)
+        ymin = fctr * math.floor(ymin / fctr)
+        ymax = fctr * (math.floor(ymax / fctr + 1))
+        return ymin, ymax, fctr

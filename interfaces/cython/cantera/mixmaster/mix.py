@@ -23,8 +23,8 @@ class Species:
         self.name = name
         self.symbol = name
         self.index = self.gas.species_index(name)
-        self.minTemp = self.gas.species(name).thermo.min_temp
-        self.maxTemp = self.gas.species(name).thermo.max_temp
+        self.minTemp = self.gas.min_temp
+        self.maxTemp = self.gas.max_temp
         self.molecularWeight = self.gas.molecular_weights[self.index]
         self.c = []
         self.element_names = self.gas.element_names

@@ -134,8 +134,8 @@ class MixMaster:
                                    ])
 
         # load the pre-loaded mechanisms
-        for m in _autoload:
-            self.load_mech(m[0], m[1], 0)
+        for mechanism in _autoload:
+            self.load_mech(mechanism[0], mechanism[1], 0)
 
         self.make_windows()
         self.add_window('import', ImportFrame(self))
@@ -161,7 +161,7 @@ class MixMaster:
         if path_name:
             self.load_mech('', path_name)
 
-    def load_mech(self, mech_name, path_name, mw=1):
+    def load_mech(self, mech_name, path_name, make_window=1):
         p = os.path.normpath(os.path.dirname(path_name))
         self.file_name = os.path.basename(path_name)
         ff = os.path.splitext(self.file_name)
@@ -172,7 +172,7 @@ class MixMaster:
 
         except Exception as e:
             utilities.handleError('could not create gas mixture object: ' +
-                                  ff[0] + '\n'+str(e))
+                                  ff[0] + '\n' + str(e))
             self.mech_name = 'Error'
             return
 
@@ -182,7 +182,7 @@ class MixMaster:
             mech_name = self.mech_name
 
         self.mech_frame.add_mechanism(mech_name, self.mech)
-        if mw == 1:
+        if make_window == 1:
             self.make_windows()
 
     def add_window(self, name, w):

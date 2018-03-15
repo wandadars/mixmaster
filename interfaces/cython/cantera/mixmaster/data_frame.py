@@ -9,7 +9,7 @@ if sys.version_info[0] == 3:
     import tkinter as tk
     from tkinter.filedialog import askopenfilename
 else:
-    import tkinter as tk
+    import Tkinter as tk
     from tkFileDialog import askopenfilename
 
 import cantera as ct

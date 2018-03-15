@@ -1,18 +1,18 @@
 # This file is part of Cantera. See License.txt in the top-level directory or
 # at http://www.cantera.org/license.txt for license and copyright information.
 
-from cantera import *
-
 import sys
+import cantera as ct
+
 if sys.version_info[0] == 3:
     import tkinter as tk
 else:
     import Tkinter as tk
 
-from .Units import temperature, pressure, density, specificEnergy, specificEntropy
-from .unit_chooser import UnitVar
-from .thermo_prop import ThermoProp
-from .utilities import handleError
+from Units import temperature, pressure, density, specificEnergy, specificEntropy
+from unit_chooser import UnitVar
+from thermo_prop import ThermoProp
+from utilities import handleError
 
 _TEMPERATURE = 0
 _PRESSURE = 1
@@ -20,6 +20,7 @@ _DENSITY = 2
 _INTENERGY = 3
 _ENTHALPY = 4
 _ENTROPY = 5
+
 
 class ThermoFrame(tk.Frame):
     def __init__(self, master, top):

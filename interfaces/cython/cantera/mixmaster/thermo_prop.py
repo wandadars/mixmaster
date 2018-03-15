@@ -7,7 +7,7 @@ if sys.version_info[0] == 3:
 else:
     import Tkinter as tk
 
-from .unit_chooser import UnitVar
+from unit_chooser import UnitVar
 
 _tv = ['Temperature','Internal Energy','Enthalpy']
 _pv = ['Pressure', 'Density']
@@ -19,6 +19,7 @@ def badpair(a, b):
     else:
         if not b.name in _tv:
             return 1
+
 
 class ThermoProp:
     def __init__(self, master, thermoframe, row, name, value, units, defaultunit=0):

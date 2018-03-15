@@ -3,13 +3,13 @@
 
 import re
 import math
+import sys
 import cantera as ct
 
-from .Units import temperature, specificEnergy, specificEntropy
-from .unit_chooser import UnitVar
-from .graph_frame import Graph
+from Units import temperature, specificEnergy, specificEntropy
+from unit_chooser import UnitVar
+from graph_frame import Graph
 
-import sys
 if sys.version_info[0] == 3:
     import tkinter as tk
 else:

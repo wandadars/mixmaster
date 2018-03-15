@@ -9,7 +9,6 @@ import math
 import sys
 
 import cantera as ct
-
 from species_info import SpeciesInfo
 
 if sys.version_info[0] == 3:
@@ -296,7 +295,6 @@ class ReactionKineticsFrame(tk.Frame):
 
 
 class ReactionPathFrame(tk.Frame):
-
     def __init__(self, top):
         self.master = tk.Toplevel()
         self.master.protocol("WM_DELETE_WINDOW", self.hide)
@@ -382,7 +380,6 @@ class ReactionPathFrame(tk.Frame):
         self.master.withdraw()
 
     def show(self, e=None):
-
         self.master.deiconify()
         el = self.g.element_name(self.el.get())
         det = False

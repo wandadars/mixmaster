@@ -1,5 +1,7 @@
 # This file is part of Cantera. See License.txt in the top-level directory or
 # at http://www.cantera.org/license.txt for license and copyright information.
+import menu
+import newflow
 
 # functionality imports
 import sys
@@ -7,8 +9,6 @@ if sys.version_info[0] == 3:
     import tkinter as tk
 else:
     import Tkinter as tk
-
-from Cantera.gui import menu, newflow
 
 
 class App:

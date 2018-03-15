@@ -1,18 +1,17 @@
 # This file is part of Cantera. See License.txt in the top-level directory or
 # at http://www.cantera.org/license.txt for license and copyright information.
 
-from cantera import *
-
 import sys
+import cantera as ct
+
 if sys.version_info[0] == 3:
     from tkinter import *
 else:
     from Tkinter import *
 
-from .control_panel import ControlWindow
-from .control_panel import make_menu, menuitem_state, add_menu_item
-#from Cantera.Examples.Tk import _mechdir
-import os
+from control_panel import ControlWindow
+from control_panel import make_menu, menuitem_state, add_menu_item
+
 
 # automatically-loaded mechanisms
 _autoload = [
@@ -27,7 +26,6 @@ def testit():
 
 
 class MechManager(Frame):
-
     def __init__(self, master, app):
         Frame.__init__(self, master)
         #self.config(relief=GROOVE, bd=4)
@@ -87,6 +85,6 @@ class MechManager(Frame):
 
     def set_mechanism(self, event=None):
         i = self.mech_index.get()
-        self.app.mech = self.mechanisms[i-1][1]
+        self.app.mech = self.mechanisms[i - 1][1]
         self.app.make_mix()
         self.app.make_windows()

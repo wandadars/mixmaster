@@ -49,8 +49,8 @@ class UnitVar(tk.Frame):
         self.new.transient(self.master)
         self.new.bind('<Return>', self.finished, '+')
 
-        r=0
-        c=0
+        r = 0
+        c = 0
         for each in self.unitlist:
             if each[0] != '_' and each[:1] != '__' and each != 'SI':
                 each = re.sub('__', ' / ', each)
@@ -61,7 +61,7 @@ class UnitVar(tk.Frame):
                             command=self.update,
                             ).grid(column=c, row=r, sticky=tk.W)
                 r += 1
-                if r>10:
+                if r > 10:
                     r = 0
                     c += 1
                     r += 1

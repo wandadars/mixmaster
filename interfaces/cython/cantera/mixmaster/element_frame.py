@@ -6,15 +6,14 @@
 # This file is part of Cantera. See License.txt in the top-level directory or
 # at http://www.cantera.org/license.txt for license and copyright information.
 
+import string
+import cantera as ct
 import sys
 if sys.version_info[0] == 3:
     import tkinter as tk
 else:
     import Tkinter as tk
 
-import string
-
-import cantera as ct
 
 # (row,column) positions in the periodic table
 _pos = {'H': (1,1), 'He': (1,18),
@@ -32,8 +31,8 @@ _pos = {'H': (1,1), 'He': (1,18),
         'In': (5,13), 'Sn': (5,14), 'Sb': (5,15), 'Te': (5,16), 'I': (5,17), 'Xe': (5,18)
         }
 
-class PeriodicTable(tk.Frame):
 
+class PeriodicTable(tk.Frame):
     def __init__(self, master, selected=[]):
         tk.Frame.__init__(self, master)
         self.master = master

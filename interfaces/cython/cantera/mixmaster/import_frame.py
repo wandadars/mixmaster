@@ -5,6 +5,8 @@ import os
 import math
 import sys
 
+import cantera as ct
+
 if sys.version_info[0] == 3:
     import tkinter  as tk
     from tkinter.filedialog import askopenfilename
@@ -12,9 +14,6 @@ else:
     import Tkinter as tk
     from tkFileDialog import askopenfilename
 
-import cantera as ct
-
-#from Cantera.ck2ctml import ck2ctml
 
 class ImportFrame(tk.Frame):
     def __init__(self, top):

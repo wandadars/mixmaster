@@ -2,6 +2,8 @@
 # at http://www.cantera.org/license.txt for license and copyright information.
 
 import sys
+import cantera as ct
+
 if sys.version_info[0] == 3:
     import tkinter as tk
     from tkinter.filedialog import askopenfilename
@@ -10,8 +12,6 @@ else:
     import Tkinter as tk
     import tkMessageBox as messagebox
     from tkFileDialog import askopenfilename
-
-import cantera as ct
 
 
 class NewFlowDialog():
@@ -41,7 +41,7 @@ class NewFlowDialog():
         # ------------- gas file name input -----------
         gasf = tk.Frame(top, bd=2, relief=tk.GROOVE)
         gasf.grid(row=4, column=0, columnspan=2)
-        gl = Label(gasf, text='Gas Mixture Specification')
+        gl = tk.Label(gasf, text='Gas Mixture Specification')
         gl.grid(row=0, column=0)
 
 

@@ -7,6 +7,7 @@ if sys.version_info[0] == 3:
 else:
     import Tkinter as tk
 
+
 def make_menu(name, menubar, lst):
     button = tk.Menubutton(menubar, text=name, padx=3, pady=1)
     button.pack(side=tk.LEFT, anchor=tk.W)
@@ -32,5 +33,5 @@ def make_menu(name, menubar, lst):
                 submenu=make_menu(entry[0], menu, entry[1])
                 menu.add_cascade(label=entry[0], menu=submenu)
 
-    button['menu']=menu
+    button['menu'] = menu
     return button

@@ -2,9 +2,7 @@
 # at http://www.cantera.org/license.txt for license and copyright information.
 
 import string
-import os, sys
-import types
-import traceback
+import sys
 
 try:
     if sys.version_info[0] == 3:

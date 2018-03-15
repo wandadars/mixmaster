@@ -16,9 +16,8 @@ import numpy as np
 # Cantera imports
 import cantera as ct
 
-import utilities
-
 # local imports
+import utilities
 from transport_frame import TransportFrame
 from composition_frame import MixtureFrame
 from thermo_frame import ThermoFrame

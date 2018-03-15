@@ -1,15 +1,14 @@
 # This file is part of Cantera. See License.txt in the top-level directory or
 # at http://www.cantera.org/license.txt for license and copyright information.
 
-from cantera import *
-
+import cantera as ct
 import sys
 if sys.version_info[0] == 3:
     import tkinter as tk
 else:
     import Tkinter as tk
 
-from .species_info import SpeciesInfo
+from species_info import SpeciesInfo
 
 _CUTOFF = 1.e-15
 _ATOL = 1.e-15

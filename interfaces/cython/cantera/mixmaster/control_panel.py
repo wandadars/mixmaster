@@ -13,10 +13,6 @@ else:
     import Tkinter as tk
     from ScrolledText import ScrolledText
 
-#import datawindow
-#import filewindow
-
-
 
 class ControlWindow(tk.Frame):
     def __init__(self, title, master=None):

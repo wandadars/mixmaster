@@ -14,7 +14,6 @@ def main():
 
     #Main code
     MixMaster()
-
     logging.info('Mixmaster Closing')
 
 if __name__ == '__main__':

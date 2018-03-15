@@ -28,7 +28,7 @@ from kinetics_frame import SpeciesKineticsFrame, ReactionKineticsFrame, Reaction
 #from Edit import EditFrame
 from mech_manager import MechManager, _autoload
 
-from .unit_chooser import UnitVar
+from unit_chooser import UnitVar
 from control_panel import ControlWindow, make_menu, menuitem_state
 from mix import Mix, Species
 

@@ -1,9 +1,10 @@
 # This file is part of Cantera. See License.txt in the top-level directory or
 # at http://www.cantera.org/license.txt for license and copyright information.
 
-import cantera as ct
 from numpy import zeros, ones
+import cantera as ct
 import utilities
+
 
 def species_dict(phase, x):
     species_names = phase.species_names()
@@ -21,18 +22,18 @@ class Species:
         x = g.X
         self.name = name
         self.symbol = name
-        self.index = g.species_index(name)
-        self.minTemp = g.species(name).thermo.min_temp
-        self.maxTemp = g.species(name).thermo.max_temp
-        self.molecularWeight = g.molecular_weights[self.index]
+        self.index = self.gas.species_index(name)
+        self.minTemp = self.gas.species(name).thermo.min_temp
+        self.maxTemp = self.gas.species(name).thermo.max_temp
+        self.molecularWeight = self.gas.molecular_weights[self.index]
         self.c = []
-        self.e = g.element_names
+        self.element_names = self.gas.element_names
         self.hf0 = self.enthalpy_RT(298.15) * ct.gas_constant * 298.15
         g.TPX = t, p, x
-        for n in range(len(self.e)):
+        for n in range(len(self.element_names)):
             na = g.n_atoms(self.index, n)
             if na > 0:
-                self.c.append((self.e[n], na))
+                self.c.append((self.element_names[n], na))
 
     def composition(self):
         return self.c
@@ -41,11 +42,11 @@ class Species:
         self.gas.TP = t, None
         return self.gas.partial_molar_enthalpies[self.index] / (ct.gas_constant * t)
 
-    def cp_R(self,t):
+    def cp_R(self, t):
         self.gas.TP = t, None
         return self.gas.standard_cp_R[self.index]
 
-    def entropy_R(self,t):
+    def entropy_R(self, t):
         self.gas.TP = t, None
         return self.gas.standard_entropies_R[self.index]
 

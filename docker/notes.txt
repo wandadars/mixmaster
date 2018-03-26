@@ -1,0 +1,12 @@
+To generate a Dockerfile go to the top mixmaster directory and run: python ./docker/docker_build.py
+
+To generate an image use: ./docker/build_image.sh
+
+To create a Docker container from the MixMaster image that is created from the previous step use: ./docker/linux_docker/installmixmaster
+To start the container use: ./docker/linux_docker/startmixmaster
+
+
+Useful Commands:
+docker ps -a   --> Shows all containers that are present on the system
+docker images  --> Shows all images
+

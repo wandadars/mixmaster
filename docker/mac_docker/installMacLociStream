@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+streamtag="stream_v206"
+
+username="$USER"
+userID="$(id -u)"
+groupID="$(id -g)"
+home="${1:-$HOME}"
+
+echo "Host Info:"
+echo "Username: $username"
+echo "Home: $home"
+
+imageName="locistream/${streamtag}_opensuse423:$streamtag"
+containerName=$streamtag   
+
+echo "Docker containers on the system:"
+docker ps -a 
+
+echo "Creating Loci-Stream container: ${containerName}"
+docker rm -f $streamtag
+
+docker run  -it -d --name ${containerName}           \
+    --workdir="/home/streamuser"                     \
+    -v="${home}:/home/streamuser/workingDir"         \
+     ${imageName} /bin/bash                       
+
+     
+echo "Container ${containerName} was created."
+echo "Run the ./startMacLociStream script to start container"

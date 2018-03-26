@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+version_tag="mixmaster_v1"
+
+home="${1:-$HOME}"
+username="$USER"
+userID="$(id -u)"
+groupID="$(id -g)"
+
+echo "Host Info:"
+echo "Username: $username"
+echo "Home: $HOME"
+
+imageName="mixmaster/${version_tag}_ubuntu1704:$version_tag"
+containerName=$version_tag   
+
+echo "Docker containers on the system:"
+docker ps -a 
+
+
+echo "Creating Loci-Stream container: ${containerName}"
+docker rm -f $streamtag
+docker run  -it -d --name ${containerName}  -u $userID:$groupID                 \
+            -e USER=${username} --workdir="/home/streamuser"                    \
+            --volume="${home}:/home/streamuser/workdir" ${imageName} /bin/bash  \
+
+echo "Container ${containerName} was created."
+echo "Run ./startLociStream to start the container"

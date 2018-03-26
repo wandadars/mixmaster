@@ -1,0 +1,15 @@
+
+#Source folders
+mixmaster 
+
+#Files
+license.txt
+readme.rst
+setup.py
+
+#Git materials
+.git*
+
+#Any docker images
+docker/*.tar
+
